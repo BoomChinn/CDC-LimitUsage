@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "CDC Limit Usage",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
+    },
+    {
+      "name": "CDC Limit Usage 2",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev2"],
+      "port": 3001
+    }
+  ]
+}

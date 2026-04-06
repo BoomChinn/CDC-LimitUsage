@@ -1,0 +1,11 @@
+{
+  "name": "cdc-limit-usage",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "serve . -p 3000",
+    "dev2": "serve . -p 3001"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
