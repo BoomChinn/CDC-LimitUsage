@@ -3,15 +3,15 @@
   "configurations": [
     {
       "name": "CDC Limit Usage",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["node_modules/.bin/serve", "."],
+      "autoPort": true
     },
     {
       "name": "CDC Limit Usage 2",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev2"],
-      "port": 3001
+      "runtimeExecutable": "/opt/homebrew/bin/node",
+      "runtimeArgs": ["node_modules/.bin/serve", "."],
+      "autoPort": true
     }
   ]
 }

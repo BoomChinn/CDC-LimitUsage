@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "serve . -p 3000",
-    "dev": "serve . -p 3000",
-    "dev2": "serve . -p 3001"
+    "dev": "serve .",
+    "dev2": "serve ."
   },
   "devDependencies": {
     "serve": "^14.2.4"

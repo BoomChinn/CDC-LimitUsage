@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "mcp__Claude_Preview__preview_start",
-      "Bash(brew install:*)"
+      "Bash(brew install:*)",
+      "Read(//Users/kuboomchin/.nvm/versions/**)",
+      "Read(//opt/homebrew/Cellar/node/25.2.1/bin/**)",
+      "Bash(command -v node)",
+      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js projects:list)",
+      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting)"
     ]
   }
 }

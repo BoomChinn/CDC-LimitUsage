@@ -267,6 +267,7 @@ body {
 .det-row-flex { display: flex; align-items: center; justify-content: space-between; }
 .det-lbl { font-size: 17px; color: var(--lbl); letter-spacing: -.2px; }
 .det-sublbl { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.det-sep { height: .5px; background: var(--sep); margin: 0 16px; }
 
 /* Amount field */
 .amt-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -294,21 +295,28 @@ body {
 .slider-lbls { display: flex; justify-content: space-between; margin-top: 4px; }
 .slider-lbls span { font-size: 11px; color: var(--gray3); }
 
-/* Stepper */
-.stepper { display: flex; border: 1px solid var(--gray4); border-radius: 7px; overflow: hidden; height: 32px; }
-.step-btn {
-  width: 36px; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; background: var(--gray6); color: var(--blue);
-  font-size: 20px; font-weight: 300; border: none; outline: none;
-  user-select: none; transition: background .1s;
+/* Slider with ± adjustment buttons */
+.sl-with-btns { display: flex; align-items: center; gap: 8px; }
+.sl-adj-btn {
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  border: none; background: var(--gray5); color: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .1s; user-select: none;
 }
-.step-btn:active { background: var(--gray4); }
-.step-val {
-  min-width: 66px; text-align: center; font-size: 14px; font-weight: 500;
-  background: var(--gray6); display: flex; align-items: center; justify-content: center;
-  border-left: .5px solid var(--gray4); border-right: .5px solid var(--gray4);
-  padding: 0 4px;
+.sl-adj-btn:active { background: var(--gray4); transform: scale(.92); }
+.sl-adj-btn .material-icons-round { font-size: 18px; }
+.sl-adj-btn:disabled { opacity: .3; pointer-events: none; }
+
+/* Amount display with unit below */
+.amt-display { display: flex; align-items: flex-end; gap: 6px; margin-bottom: 10px; }
+.amt-big {
+  font-size: 26px; font-weight: 600; letter-spacing: -.5px;
+  color: var(--lbl); border: none; outline: none;
+  background: transparent; font-family: inherit;
+  min-width: 0; flex: 1; text-align: right;
 }
+.amt-big:disabled { color: var(--gray3); }
+.amt-unit-sm { font-size: 13px; color: var(--gray); padding-bottom: 4px; flex-shrink: 0; }
 
 /* Footer note */
 .foot-note { font-size: 13px; color: var(--gray); line-height: 1.55; padding: 8px 22px 0; }
@@ -424,7 +432,7 @@ body {
     </div>
     <div class="card-info">
       <div class="card-name">KTC Visa Platinum</div>
-      <div class="card-masked">**** &nbsp;**** &nbsp;**** &nbsp;1234</div>
+      <div class="card-masked">xxxx 1234</div>
       <div class="card-limit">วงเงินสูงสุด: 100,000 THB</div>
     </div>
   </div>
@@ -464,7 +472,7 @@ body {
     <div class="list-row" data-key="intl-online" onclick="openDetail('intl-online')">
       <div class="badge orange"><span class="material-icons-round">public</span></div>
       <div class="row-txt">
-        <div class="row-title">ช้อปปิ้งออนไลน์ (ต่างประเทศ)</div>
+        <div class="row-title">ช้อปปิ้งออนไลน์</div>
         <div class="row-sub" id="sub-intl-online"></div>
       </div>
       <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -472,7 +480,7 @@ body {
     <div class="list-row" data-key="intl-instore" onclick="openDetail('intl-instore')">
       <div class="badge orange"><span class="material-icons-round">flight_takeoff</span></div>
       <div class="row-txt">
-        <div class="row-title">รูดซื้อสินค้าหน้าร้าน (ต่างประเทศ)</div>
+        <div class="row-title">รูดซื้อสินค้าหน้าร้าน</div>
         <div class="row-sub" id="sub-intl-instore"></div>
       </div>
       <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -549,55 +557,78 @@ body {
       </div>
     </div>
 
-    <!-- Section 2: Limits -->
+    <!-- Section 2: Limits & Frequency (merged) -->
     <div class="det-sec">
-      <div class="det-sec-hdr">การจำกัดวงเงิน</div>
+      <div class="det-sec-hdr">การจำกัดวงเงินและความถี่</div>
       <div class="det-card" id="d-limits">
 
-        <!-- Monthly limit -->
+        <!-- Row 1: Monthly limit -->
         <div class="det-row">
-          <div style="font-size:15px;color:var(--gray);margin-bottom:8px;">วงเงินรวมต่อเดือน</div>
-          <div class="amt-row">
-            <span class="amt-sym">฿</span>
-            <input class="amt-inp" type="number" id="d-monthly" min="0" max="100000" oninput="syncMonthlySlider()">
-            <span class="amt-unit">THB</span>
+          <div style="font-size:13px;color:var(--gray);margin-bottom:6px;">วงเงินรวมต่อเดือน</div>
+          <div class="amt-display">
+            <input class="amt-big" type="text" inputmode="numeric" pattern="[0-9]*"
+                   id="d-monthly" placeholder="100,000" oninput="syncMonthlySlider()">
+            <span class="amt-unit-sm">THB</span>
           </div>
-          <input class="ios-slider" type="range" id="d-monthly-sl" min="0" max="100000" step="500"
-                 style="--pct:100%" oninput="syncMonthlyAmt()">
-          <div class="slider-lbls"><span>0</span><span>สูงสุด</span></div>
+          <div class="sl-with-btns">
+            <button class="sl-adj-btn" onclick="adjMonthly(-500)" id="btn-monthly-dn">
+              <span class="material-icons-round">remove</span>
+            </button>
+            <input class="ios-slider" type="range" id="d-monthly-sl"
+                   min="1" max="100000" step="500" style="--pct:100%" oninput="syncMonthlyAmt()">
+            <button class="sl-adj-btn" onclick="adjMonthly(500)" id="btn-monthly-up">
+              <span class="material-icons-round">add</span>
+            </button>
+          </div>
+          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
         </div>
 
-        <!-- Max per transaction -->
+        <div class="det-sep"></div>
+
+        <!-- Row 2: Max per transaction -->
         <div class="det-row">
-          <div style="font-size:15px;color:var(--gray);margin-bottom:8px;">ยอดสูงสุดต่อรายการ</div>
-          <div class="amt-row">
-            <span class="amt-sym">฿</span>
-            <input class="amt-inp" type="number" id="d-maxtxn" min="0" max="100000" oninput="syncMaxSlider()">
-            <span class="amt-unit">THB</span>
+          <div style="font-size:13px;color:var(--gray);margin-bottom:6px;">ยอดสูงสุดต่อรายการ</div>
+          <div class="amt-display">
+            <input class="amt-big" type="text" inputmode="numeric" pattern="[0-9]*"
+                   id="d-maxtxn" placeholder="100,000" oninput="syncMaxSlider()">
+            <span class="amt-unit-sm">THB</span>
           </div>
-          <input class="ios-slider" type="range" id="d-maxtxn-sl" min="0" max="100000" step="500"
-                 style="--pct:100%" oninput="syncMaxAmt()">
-          <div class="slider-lbls"><span>0</span><span>สูงสุด</span></div>
+          <div class="sl-with-btns">
+            <button class="sl-adj-btn" onclick="adjMaxTxn(-500)" id="btn-maxtxn-dn">
+              <span class="material-icons-round">remove</span>
+            </button>
+            <input class="ios-slider" type="range" id="d-maxtxn-sl"
+                   min="1" max="100000" step="500" style="--pct:100%" oninput="syncMaxAmt()">
+            <button class="sl-adj-btn" onclick="adjMaxTxn(500)" id="btn-maxtxn-up">
+              <span class="material-icons-round">add</span>
+            </button>
+          </div>
+          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
         </div>
 
-      </div>
-    </div>
+        <div class="det-sep"></div>
 
-    <!-- Section 3: Frequency -->
-    <div class="det-sec">
-      <div class="det-sec-hdr">การจำกัดความถี่</div>
-      <div class="det-card" id="d-freq">
-        <div class="det-row det-row-flex">
-          <div>
-            <div class="det-lbl">จำนวนรายการต่อเดือน</div>
-            <div class="det-sublbl" id="d-count-lbl">ไม่จำกัด</div>
+        <!-- Row 3: Count per month -->
+        <div class="det-row">
+          <div style="font-size:13px;color:var(--gray);margin-bottom:6px;">จำนวนรายการต่อเดือน</div>
+          <div class="amt-display">
+            <input class="amt-big" type="text" inputmode="numeric" pattern="[0-9]*"
+                   id="d-count" placeholder="ไม่จำกัด" oninput="syncCountSlider()">
+            <span class="amt-unit-sm">ครั้ง</span>
           </div>
-          <div class="stepper">
-            <button class="step-btn" onclick="stepCount(-1)">−</button>
-            <div class="step-val" id="d-count-val">ไม่จำกัด</div>
-            <button class="step-btn" onclick="stepCount(1)">+</button>
+          <div class="sl-with-btns">
+            <button class="sl-adj-btn" onclick="adjCount(-1)" id="btn-count-dn">
+              <span class="material-icons-round">remove</span>
+            </button>
+            <input class="ios-slider" type="range" id="d-count-sl"
+                   min="1" max="999" step="1" style="--pct:100%" oninput="syncCountAmt()">
+            <button class="sl-adj-btn" onclick="adjCount(1)" id="btn-count-up">
+              <span class="material-icons-round">add</span>
+            </button>
           </div>
+          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>999 (สูงสุด / ไม่จำกัด)</span></div>
         </div>
+
       </div>
     </div>
 
@@ -657,7 +688,9 @@ body {
 /* ══════════════ CONSTANTS ══════════════ */
 const MAX_M = 100000;   // max monthly
 const MAX_T = 100000;   // max per-txn
-const MAX_C = 99;       // max count (display as ไม่จำกัด)
+const MAX_C = 999;      // max count (display as ไม่จำกัด)
+const STEP_M = 500;     // money step
+const STEP_C = 1;       // count step
 const DUR   = 380;
 
 /* ══════════════ STATE ══════════════ */
@@ -665,8 +698,8 @@ const state = {
   'dom-online':       { title:'ช้อปปิ้งออนไลน์',                   enabled:true,  monthly:10000, maxTxn:MAX_T,  count:MAX_C },
   'dom-instore':      { title:'รูดซื้อสินค้าหน้าร้าน',              enabled:true,  monthly:MAX_M, maxTxn:MAX_T,  count:MAX_C },
   'dom-contactless':  { title:'แตะจ่าย (Contactless)',               enabled:false, monthly:MAX_M, maxTxn:MAX_T,  count:MAX_C },
-  'intl-online':      { title:'ช้อปปิ้งออนไลน์ (ต่างประเทศ)',       enabled:true,  monthly:5000,  maxTxn:MAX_T,  count:3     },
-  'intl-instore':     { title:'รูดซื้อสินค้าหน้าร้าน (ต่างประเทศ)', enabled:true,  monthly:30000, maxTxn:5000,   count:MAX_C },
+  'intl-online':      { title:'ช้อปปิ้งออนไลน์',        enabled:true,  monthly:5000,  maxTxn:MAX_T,  count:3     },
+  'intl-instore':     { title:'รูดซื้อสินค้าหน้าร้าน', enabled:true,  monthly:30000, maxTxn:5000,   count:MAX_C },
   'intl-contactless': { title:'แตะจ่าย (Contactless)',               enabled:true,  monthly:MAX_M, maxTxn:MAX_T,  count:MAX_C },
 };
 
@@ -684,22 +717,20 @@ tick(); setInterval(tick, 15000);
 /* ══════════════ SUBTITLE LOGIC ══════════════ */
 function buildSubtitle(k) {
   const s = state[k];
-  if (!s.enabled) return { text:'ปิดใช้งาน', red:true };
+  if (!s.enabled) return `<span style="color:var(--red)">ปิดใช้งาน</span>`;
   const parts = [];
   if (s.monthly < MAX_M) parts.push(`รวม ${s.monthly.toLocaleString()} THB/ด.`);
   if (s.maxTxn  < MAX_T) parts.push(`สูงสุด ${s.maxTxn.toLocaleString()} THB/ครั้ง`);
   if (s.count   < MAX_C) parts.push(`${s.count} ครั้ง/ด.`);
-  return parts.length
-    ? { text:'เปิด • ' + parts.join(' • '), red:false }
-    : { text:'เปิด • ไม่จำกัด', red:false };
+  const detail = parts.length ? ' • ' + parts.join(' • ') : ' • ไม่จำกัด';
+  return `<span style="color:var(--green)">เปิด</span>${detail}`;
 }
 
 function refreshSub(k) {
   const el = document.getElementById('sub-' + k);
   if (!el) return;
-  const { text, red } = buildSubtitle(k);
-  el.textContent = text;
-  el.className   = 'row-sub' + (red ? ' red' : '');
+  el.innerHTML = buildSubtitle(k);
+  el.className = 'row-sub';
 }
 
 Object.keys(state).forEach(refreshSub);
@@ -732,14 +763,8 @@ function openDetail(key) {
   document.getElementById('d-title').textContent = s.title;
   document.getElementById('d-enable').checked = s.enabled;
 
-  document.getElementById('d-monthly').value  = s.monthly;
-  document.getElementById('d-monthly-sl').value = s.monthly;
-  setSliderPct('d-monthly-sl', s.monthly, MAX_M);
-
-  document.getElementById('d-maxtxn').value  = s.maxTxn;
-  document.getElementById('d-maxtxn-sl').value = s.maxTxn;
-  setSliderPct('d-maxtxn-sl', s.maxTxn, MAX_T);
-
+  setMonthly(s.monthly);
+  setMaxTxn(s.maxTxn);
   setCount(s.count);
   onEnableChange();
   s2.scrollTop = 0;
@@ -792,7 +817,6 @@ function confirmAndReturn() {
 function onEnableChange() {
   const on = document.getElementById('d-enable').checked;
   document.getElementById('d-limits').classList.toggle('disabled', !on);
-  document.getElementById('d-freq').classList.toggle('disabled', !on);
 }
 
 function setSliderPct(id, val, max) {
@@ -800,38 +824,40 @@ function setSliderPct(id, val, max) {
   document.getElementById(id).style.setProperty('--pct', pct + '%');
 }
 
-function syncMonthlySlider() {
-  const v = Math.min(MAX_M, Math.max(0, parseInt(document.getElementById('d-monthly').value) || 0));
-  document.getElementById('d-monthly-sl').value = v;
-  setSliderPct('d-monthly-sl', v, MAX_M);
-}
-function syncMonthlyAmt() {
-  const v = parseInt(document.getElementById('d-monthly-sl').value);
+/* ── unified set/sync helpers ── */
+function setMonthly(v) {
+  v = Math.min(MAX_M, Math.max(1, v || 1));
   document.getElementById('d-monthly').value = v;
-  setSliderPct('d-monthly-sl', v, MAX_M);
+  document.getElementById('d-monthly-sl').value = v;
+  setSliderPct('d-monthly-sl', v - 1, MAX_M - 1);
 }
+function syncMonthlySlider() { setMonthly(parseInt(document.getElementById('d-monthly').value)); }
+function syncMonthlyAmt()    { setMonthly(parseInt(document.getElementById('d-monthly-sl').value)); }
+function adjMonthly(d) { setMonthly((parseInt(document.getElementById('d-monthly').value)||1) + d); }
 
-function syncMaxSlider() {
-  const v = Math.min(MAX_T, Math.max(0, parseInt(document.getElementById('d-maxtxn').value) || 0));
-  document.getElementById('d-maxtxn-sl').value = v;
-  setSliderPct('d-maxtxn-sl', v, MAX_T);
-}
-function syncMaxAmt() {
-  const v = parseInt(document.getElementById('d-maxtxn-sl').value);
+function setMaxTxn(v) {
+  v = Math.min(MAX_T, Math.max(1, v || 1));
   document.getElementById('d-maxtxn').value = v;
-  setSliderPct('d-maxtxn-sl', v, MAX_T);
+  document.getElementById('d-maxtxn-sl').value = v;
+  setSliderPct('d-maxtxn-sl', v - 1, MAX_T - 1);
 }
+function syncMaxSlider() { setMaxTxn(parseInt(document.getElementById('d-maxtxn').value)); }
+function syncMaxAmt()    { setMaxTxn(parseInt(document.getElementById('d-maxtxn-sl').value)); }
+function adjMaxTxn(d) { setMaxTxn((parseInt(document.getElementById('d-maxtxn').value)||1) + d); }
 
-/* Stepper */
+/* Count slider (1-999, 999 = ไม่จำกัด) */
 let currentCount = MAX_C;
 function setCount(n) {
-  currentCount = Math.max(1, Math.min(MAX_C, n));
-  const label = currentCount === MAX_C ? 'ไม่จำกัด' : currentCount + ' ครั้ง/ด.';
-  const val   = currentCount === MAX_C ? 'ไม่จำกัด' : String(currentCount);
-  document.getElementById('d-count-val').textContent  = val;
-  document.getElementById('d-count-lbl').textContent  = label;
+  currentCount = Math.min(MAX_C, Math.max(1, Math.round(n)));
+  const isMax  = currentCount === MAX_C;
+  document.getElementById('d-count').value = isMax ? '' : currentCount;
+  document.getElementById('d-count').placeholder = isMax ? 'ไม่จำกัด' : '';
+  document.getElementById('d-count-sl').value = currentCount;
+  setSliderPct('d-count-sl', currentCount - 1, MAX_C - 1);
 }
-function stepCount(d) { setCount(currentCount + d); }
+function syncCountSlider() { setCount(parseInt(document.getElementById('d-count').value) || MAX_C); }
+function syncCountAmt()    { setCount(parseInt(document.getElementById('d-count-sl').value)); }
+function adjCount(d) { setCount(currentCount + d); }
 
 /* ══════════════ GLOBAL SAVE — FACE ID FLOW ══════════════ */
 function onSave() {
