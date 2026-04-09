@@ -533,7 +533,7 @@ html.is-mobile #app { width: 100vw !important; }
     <div class="large-title">ตั้งค่า<br>บัตรเครดิต</div>
   </div>
 
-  <!-- 3.1 Selected Card Info -->
+  <!-- 3.1 Selected Card Info (no credit limit on this screen) -->
   <div class="card-widget">
     <div class="mini-card">
       <div class="mini-card-chip"></div>
@@ -541,9 +541,8 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="mini-card-logo"><span></span><span></span></div>
     </div>
     <div class="card-info">
-      <div class="card-name">KTC Visa Platinum</div>
+      <div class="card-name">Mastercard Platinum</div>
       <div class="card-masked">xxxx 1234</div>
-      <div class="card-limit">วงเงินสูงสุด: 100,000 THB</div>
     </div>
   </div>
 
@@ -628,13 +627,27 @@ html.is-mobile #app { width: 100vw !important; }
 
   <div id="s2-content">
 
+    <!-- Card Widget with credit limit -->
+    <div class="card-widget">
+      <div class="mini-card">
+        <div class="mini-card-chip"></div>
+        <div class="mini-card-num">**** **** **** 1234</div>
+        <div class="mini-card-logo"><span></span><span></span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Mastercard Platinum</div>
+        <div class="card-masked">xxxx 1234</div>
+        <div class="card-limit">วงเงินสูงสุด: 100,000 THB</div>
+      </div>
+    </div>
+
     <!-- 4.2 Domestic -->
     <div class="sec-hdr">🇹🇭 ใช้จ่ายภายในประเทศ</div>
     <div class="inset-list">
       <div class="list-row" onclick="openDetail('dom-online')">
         <div class="badge blue"><span class="material-icons-round">shopping_cart</span></div>
         <div class="row-txt">
-          <div class="row-title">ช้อปปิ้งออนไลน์</div>
+          <div class="row-title">ช้อปปิ้งออนไลน์ในประเทศ</div>
           <div class="row-sub" id="sub-dom-online"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -642,7 +655,7 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="list-row" onclick="openDetail('dom-instore')">
         <div class="badge blue"><span class="material-icons-round">storefront</span></div>
         <div class="row-txt">
-          <div class="row-title">รูดซื้อสินค้าหน้าร้าน</div>
+          <div class="row-title">รูดซื้อสินค้าหน้าร้านในประเทศ</div>
           <div class="row-sub" id="sub-dom-instore"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -650,7 +663,7 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="list-row" onclick="openDetail('dom-contactless')">
         <div class="badge blue"><span class="material-icons-round">contactless</span></div>
         <div class="row-txt">
-          <div class="row-title">แตะจ่าย (Contactless)</div>
+          <div class="row-title">แตะจ่ายในประเทศ (Contactless)</div>
           <div class="row-sub" id="sub-dom-contactless"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -663,7 +676,7 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="list-row" onclick="openDetail('intl-online')">
         <div class="badge orange"><span class="material-icons-round">public</span></div>
         <div class="row-txt">
-          <div class="row-title">ช้อปปิ้งออนไลน์</div>
+          <div class="row-title">ช้อปปิ้งออนไลน์ต่างประเทศ</div>
           <div class="row-sub" id="sub-intl-online"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -671,7 +684,7 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="list-row" onclick="openDetail('intl-instore')">
         <div class="badge orange"><span class="material-icons-round">flight_takeoff</span></div>
         <div class="row-txt">
-          <div class="row-title">รูดซื้อสินค้าหน้าร้าน</div>
+          <div class="row-title">รูดซื้อสินค้าหน้าร้านต่างประเทศ</div>
           <div class="row-sub" id="sub-intl-instore"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
@@ -679,7 +692,7 @@ html.is-mobile #app { width: 100vw !important; }
       <div class="list-row" onclick="openDetail('intl-contactless')">
         <div class="badge orange"><span class="material-icons-round">contactless</span></div>
         <div class="row-txt">
-          <div class="row-title">แตะจ่าย (Contactless)</div>
+          <div class="row-title">แตะจ่ายต่างประเทศ (Contactless)</div>
           <div class="row-sub" id="sub-intl-contactless"></div>
         </div>
         <div class="chev"><span class="material-icons-round">chevron_right</span></div>
