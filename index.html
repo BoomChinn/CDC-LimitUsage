@@ -13,7 +13,7 @@
   --sep:       rgba(60,60,67,0.12);
   --lbl:       #000000;
   --lbl2:      rgba(60,60,67,0.60);
-  --blue:      #007AFF;
+  --blue:      #0064FF;
   --orange:    #FF9500;
   --red:       #FF3B30;
   --green:     #34C759;
@@ -146,12 +146,12 @@ body {
   flex-shrink: 0; margin-right: 13px;
 }
 .badge .material-icons-round { font-size: 17px; color: #fff; }
-.badge.blue   { background: var(--blue); }
-.badge.orange { background: var(--orange); }
-.badge.green  { background: var(--green); }
-.badge.purple { background: var(--purple); }
-.badge.red    { background: var(--red); }
-.badge.gray   { background: var(--gray3); }
+.badge.blue,
+.badge.orange,
+.badge.green,
+.badge.purple,
+.badge.red,
+.badge.gray   { background: var(--blue); }
 
 /* ─── Lock Banner ─── */
 .lock-banner {
@@ -191,7 +191,7 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,.25), 0 .5px 1px rgba(0,0,0,.15);
   transition: transform .2s cubic-bezier(.34,1.56,.64,1);
 }
-.ios-tog input:checked ~ .tog-track  { background: var(--green); }
+.ios-tog input:checked ~ .tog-track  { background: var(--blue); }
 .ios-tog input:checked ~ .tog-thumb  { transform: translateX(20px); }
 
 /* ─── Credit Card Widget ─── */
@@ -548,7 +548,7 @@ html.is-mobile #app { width: 100vw !important; }
   </div>
 
   <!-- 3.2 การจัดการและความปลอดภัย -->
-  <div class="sec-hdr">🛡️ การจัดการและความปลอดภัย</div>
+  <div class="sec-hdr">การจัดการและความปลอดภัย</div>
   <div class="inset-list">
 
     <!-- Row 1: Lock card -->
@@ -628,8 +628,22 @@ html.is-mobile #app { width: 100vw !important; }
 
   <div id="s2-content">
 
+    <!-- Card widget with credit limit -->
+    <div class="card-widget">
+      <div class="mini-card">
+        <div class="mini-card-chip"></div>
+        <div class="mini-card-num">**** **** **** 1234</div>
+        <div class="mini-card-logo"><span></span><span></span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Mastercard Platinum</div>
+        <div class="card-masked">xxxx 1234</div>
+        <div class="card-limit">วงเงินสูงสุด: 100,000 THB</div>
+      </div>
+    </div>
+
     <!-- 4.2 Domestic -->
-    <div class="sec-hdr">🇹🇭 ใช้จ่ายภายในประเทศ</div>
+    <div class="sec-hdr">ใช้จ่ายภายในประเทศ</div>
     <div class="inset-list">
       <div class="list-row" onclick="openDetail('dom-online')">
         <div class="badge blue"><span class="material-icons-round">shopping_cart</span></div>
@@ -658,7 +672,7 @@ html.is-mobile #app { width: 100vw !important; }
     </div>
 
     <!-- 4.3 International -->
-    <div class="sec-hdr">✈️ ใช้จ่ายต่างประเทศ</div>
+    <div class="sec-hdr">ใช้จ่ายต่างประเทศ</div>
     <div class="inset-list">
       <div class="list-row" onclick="openDetail('intl-online')">
         <div class="badge orange"><span class="material-icons-round">public</span></div>
@@ -687,7 +701,7 @@ html.is-mobile #app { width: 100vw !important; }
     </div>
 
     <!-- 4.4 Other -->
-    <div class="sec-hdr">⚙️ ใช้จ่ายบัตรทำธุรกรรมอื่น</div>
+    <div class="sec-hdr">ใช้จ่ายบัตรทำธุรกรรมอื่น</div>
     <div class="inset-list">
       <div class="list-row no-tap">
         <div class="badge green"><span class="material-icons-round">atm</span></div>
@@ -732,18 +746,18 @@ html.is-mobile #app { width: 100vw !important; }
       <span class="material-icons-round" style="font-size:20px;">chevron_left</span>วงเงินฯ
     </div>
     <div class="nav-title" id="d-title">ช้อปปิ้งออนไลน์</div>
-    <div class="nav-ok" onclick="confirmAndReturnToS2()">ตกลง</div>
+    <div style="width:60px;"></div>
   </div>
 
-  <div style="padding-bottom: 40px;">
+  <div style="padding-bottom: 100px;">
 
     <!-- Section 1: Enable -->
     <div class="det-sec">
       <div class="det-card">
         <div class="det-row det-row-flex">
-          <span class="det-lbl">อนุญาตการใช้งาน</span>
+          <span class="det-lbl">เปิดการใช้งาน</span>
           <label class="ios-tog">
-            <input type="checkbox" id="d-enable" checked onchange="onEnableChange()">
+            <input type="checkbox" id="d-enable" checked onchange="onEnableChange(); checkDetailDirty()">
             <div class="tog-track"></div><div class="tog-thumb"></div>
           </label>
         </div>
@@ -834,6 +848,12 @@ html.is-mobile #app { width: 100vw !important; }
     </div>
 
   </div>
+
+  <!-- Sticky confirm button -->
+  <div class="sticky-save">
+    <button class="save-btn disabled" id="confirm-btn" onclick="confirmAndReturnToS2()">ตกลง</button>
+  </div>
+
 </div><!-- /s3 -->
 
 
@@ -894,9 +914,10 @@ const state = {
   'intl-contactless': { title:'แตะจ่าย (Contactless)',  enabled:true,  monthly:MAX_M, maxTxn:MAX_T, count:MAX_C },
 };
 
-let currentKey   = null;
-let isDirty      = false;
-let isCardLocked = false;
+let currentKey      = null;
+let isDirty         = false;
+let isCardLocked    = false;
+let detailSnapshot  = null;   // snapshot of state when detail screen opens
 
 /* ══════════════ CLOCK ══════════════ */
 function tick() {
@@ -1012,6 +1033,9 @@ function openDetail(key) {
   setMaxTxn(s.maxTxn);
   setCount(s.count);
   onEnableChange();
+  // Snapshot current values; ตกลง starts disabled
+  detailSnapshot = { enabled: s.enabled, monthly: s.monthly, maxTxn: s.maxTxn, count: s.count };
+  setConfirmBtn(false);
   s3.scrollTop = 0;
   slideIn(s2, s3);
 }
@@ -1023,6 +1047,8 @@ function goBackFromS3() {
 
 /* S3 "ตกลง" — commit + return to S2, mark dirty */
 function confirmAndReturnToS2() {
+  const btn = document.getElementById('confirm-btn');
+  if (btn && btn.classList.contains('disabled')) return;
   const s = state[currentKey];
   s.enabled = document.getElementById('d-enable').checked;
   s.monthly = parseInt(document.getElementById('d-monthly').value) || MAX_M;
@@ -1033,6 +1059,24 @@ function confirmAndReturnToS2() {
     refreshSub(currentKey);
     markDirty();
   }, DUR + 20);
+}
+
+/* ── Detail dirty tracking ── */
+function setConfirmBtn(enabled) {
+  const btn = document.getElementById('confirm-btn');
+  if (!btn) return;
+  btn.classList.toggle('disabled', !enabled);
+  btn.classList.toggle('enabled',  enabled);
+}
+
+function checkDetailDirty() {
+  if (!detailSnapshot) return;
+  const changed =
+    document.getElementById('d-enable').checked !== detailSnapshot.enabled ||
+    (parseInt(document.getElementById('d-monthly').value) || MAX_M) !== detailSnapshot.monthly ||
+    (parseInt(document.getElementById('d-maxtxn').value)  || MAX_T) !== detailSnapshot.maxTxn  ||
+    currentCount !== detailSnapshot.count;
+  setConfirmBtn(changed);
 }
 
 /* ══════════════ DETAIL CONTROLS ══════════════ */
@@ -1053,9 +1097,9 @@ function setMonthly(v) {
   document.getElementById('d-monthly-sl').value = v;
   setSliderPct('d-monthly-sl', v - 1, MAX_M - 1);
 }
-function syncMonthlySlider() { setMonthly(parseInt(document.getElementById('d-monthly').value)); }
-function syncMonthlyAmt()    { setMonthly(parseInt(document.getElementById('d-monthly-sl').value)); }
-function adjMonthly(d) { setMonthly((parseInt(document.getElementById('d-monthly').value)||1) + d); }
+function syncMonthlySlider() { setMonthly(parseInt(document.getElementById('d-monthly').value)); checkDetailDirty(); }
+function syncMonthlyAmt()    { setMonthly(parseInt(document.getElementById('d-monthly-sl').value)); checkDetailDirty(); }
+function adjMonthly(d) { setMonthly((parseInt(document.getElementById('d-monthly').value)||1) + d); checkDetailDirty(); }
 
 function setMaxTxn(v) {
   v = Math.min(MAX_T, Math.max(1, v || 1));
@@ -1063,9 +1107,9 @@ function setMaxTxn(v) {
   document.getElementById('d-maxtxn-sl').value = v;
   setSliderPct('d-maxtxn-sl', v - 1, MAX_T - 1);
 }
-function syncMaxSlider() { setMaxTxn(parseInt(document.getElementById('d-maxtxn').value)); }
-function syncMaxAmt()    { setMaxTxn(parseInt(document.getElementById('d-maxtxn-sl').value)); }
-function adjMaxTxn(d) { setMaxTxn((parseInt(document.getElementById('d-maxtxn').value)||1) + d); }
+function syncMaxSlider() { setMaxTxn(parseInt(document.getElementById('d-maxtxn').value)); checkDetailDirty(); }
+function syncMaxAmt()    { setMaxTxn(parseInt(document.getElementById('d-maxtxn-sl').value)); checkDetailDirty(); }
+function adjMaxTxn(d) { setMaxTxn((parseInt(document.getElementById('d-maxtxn').value)||1) + d); checkDetailDirty(); }
 
 /* Count slider (1–999, 999 = ไม่จำกัด) */
 let currentCount = MAX_C;
@@ -1077,9 +1121,9 @@ function setCount(n) {
   document.getElementById('d-count-sl').value = currentCount;
   setSliderPct('d-count-sl', currentCount - 1, MAX_C - 1);
 }
-function syncCountSlider() { setCount(parseInt(document.getElementById('d-count').value) || MAX_C); }
-function syncCountAmt()    { setCount(parseInt(document.getElementById('d-count-sl').value)); }
-function adjCount(d) { setCount(currentCount + d); }
+function syncCountSlider() { setCount(parseInt(document.getElementById('d-count').value) || MAX_C); checkDetailDirty(); }
+function syncCountAmt()    { setCount(parseInt(document.getElementById('d-count-sl').value)); checkDetailDirty(); }
+function adjCount(d) { setCount(currentCount + d); checkDetailDirty(); }
 
 /* ══════════════ SAVE — FACE ID → BACK TO S1 ══════════════ */
 function onSave() {
