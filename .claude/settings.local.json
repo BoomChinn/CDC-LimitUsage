@@ -7,7 +7,13 @@
       "Read(//opt/homebrew/Cellar/node/25.2.1/bin/**)",
       "Bash(command -v node)",
       "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js projects:list)",
-      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting)"
+      "Bash(PATH=\"/opt/homebrew/bin:$PATH\" /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Read(//Users/kuboomchin/Documents/FreelanceWork/AI/DS/**)",
+      "Bash(file \"Banking App - Design System-handoff.zip\")",
+      "Bash(unzip -o \"Banking App - Design System-handoff.zip\" -d ./handoff-extracted)",
+      "Bash(firebase deploy *)",
+      "Bash(node -e \"const {execSync}=require\\('child_process'\\);console.log\\(execSync\\('/opt/homebrew/bin/node /opt/homebrew/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting',{cwd:'/Users/kuboomchin/Documents/FreelanceWork/AI/CDC-LimitUsage'}\\).toString\\(\\)\\)\")"
     ]
   }
 }
