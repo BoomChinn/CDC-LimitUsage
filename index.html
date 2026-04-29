@@ -165,6 +165,30 @@ body {
 }
 .badge .material-symbols-rounded { font-size: 22px; color: var(--blue); }
 
+/* ─── Suspended Card Banner ─── */
+.suspended-banner {
+  margin: 12px 16px 4px;
+  padding: 12px 16px;
+  background: rgba(226,16,86,.07);
+  border-radius: var(--r-md);
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 14px; color: var(--red); line-height: 1.5;
+}
+.suspended-banner .material-symbols-rounded {
+  font-size: 20px; flex-shrink: 0; margin-top: 1px; color: var(--red);
+}
+.suspended-banner.hidden { display: none; }
+#s1-list-section.suspended { opacity: .38; pointer-events: none; }
+
+/* ─── Suspended tag on card widget ─── */
+.card-suspended-tag {
+  margin-top: 6px; display: inline-block;
+  font-size: 11px; font-weight: 500; color: var(--red);
+  background: rgba(226,16,86,.08); border-radius: 100px;
+  padding: 2px 8px;
+}
+.card-suspended-tag.hidden { display: none; }
+
 /* ─── Lock Banner (DS warning alert style) ─── */
 .lock-banner {
   margin: 12px 16px 4px;
@@ -354,6 +378,65 @@ body {
 
 /* Footer note */
 .foot-note { font-size: 13px; color: var(--gray); line-height: 1.55; padding: 8px 4px 0; }
+
+/* ─── Suspend Card — Page Header ─── */
+.page-hdr { padding: 20px 20px 16px; }
+.page-hdr-title {
+  font-size: 22px; font-weight: 600; color: var(--lbl);
+  line-height: 1.3; letter-spacing: -.3px; margin-bottom: 8px;
+}
+.page-hdr-sub { font-size: 14px; color: var(--gray); line-height: 1.55; }
+
+/* ─── Radio Button ─── */
+.radio-btn {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--gray3); background: var(--card);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: border-color .18s, background .18s;
+}
+.radio-btn.selected { border-color: var(--blue); background: var(--blue); }
+.radio-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #fff; opacity: 0; transition: opacity .18s;
+}
+.radio-btn.selected .radio-dot { opacity: 1; }
+
+/* ─── Remarks List ─── */
+.remarks-list {
+  list-style: none; padding: 12px 16px; margin: 0;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.remarks-list li {
+  font-size: 13px; color: var(--gray); line-height: 1.6;
+  padding-left: 14px; position: relative;
+}
+.remarks-list li::before {
+  content: '•'; position: absolute; left: 2px; color: var(--gray3);
+}
+
+/* ─── Suspend Card screens — fixed header+footer, inner scroll ─── */
+#s4, #s5 { overflow: clip; display: flex; flex-direction: column; }
+.susp-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+/* ─── Success Screen ─── */
+#s6 { display: flex; flex-direction: column; }
+.susp-success-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 0 36px;
+}
+.susp-success-icon { margin-bottom: 28px; }
+.susp-success-icon .material-symbols-rounded {
+  font-size: 72px; color: var(--blue);
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 48;
+}
+.susp-success-title {
+  font-size: 22px; font-weight: 600; color: var(--lbl);
+  letter-spacing: -.3px; margin-bottom: 12px; line-height: 1.3;
+}
+.susp-success-body {
+  font-size: 15px; color: var(--gray); line-height: 1.65;
+}
 
 /* ─── Face ID Overlay ─── */
 #faceid-overlay {
@@ -588,52 +671,61 @@ html.is-mobile #app { width: 100vw !important; }
     <div class="card-info">
       <div class="card-name">Mastercard Platinum</div>
       <div class="card-masked">xxxx 1234</div>
+      <div class="card-suspended-tag hidden" id="s1-suspended-tag">บัตรถูกอายัดแล้ว</div>
     </div>
+  </div>
+
+  <!-- Suspended Banner -->
+  <div class="suspended-banner hidden" id="suspended-banner">
+    <span class="material-symbols-rounded">credit_card_off</span>
+    <span>บัตรของคุณถูกอายัดแล้ว ขณะนี้ไม่สามารถใช้งานหรือเปลี่ยนแปลงการตั้งค่าบัตรได้</span>
   </div>
 
   <!-- การจัดการและความปลอดภัย -->
-  <div class="sec-hdr">การจัดการและความปลอดภัย</div>
-  <div class="inset-list">
+  <div id="s1-list-section">
+    <div class="sec-hdr">การจัดการและความปลอดภัย</div>
+    <div class="inset-list">
 
-    <div class="list-row no-tap">
-      <div class="badge red"><span class="material-symbols-rounded">lock</span></div>
-      <div class="row-txt">
-        <div class="row-title">ล็อคบัตรเครดิต</div>
-        <div class="row-sub">ระงับการใช้งานชั่วคราว</div>
+      <div class="list-row no-tap">
+        <div class="badge red"><span class="material-symbols-rounded">lock</span></div>
+        <div class="row-txt">
+          <div class="row-title">ล็อคบัตรเครดิต</div>
+          <div class="row-sub">ระงับการใช้งานชั่วคราว</div>
+        </div>
+        <label class="ios-tog">
+          <input type="checkbox" id="tog-lock" onchange="onCardLockChange()">
+          <div class="tog-track"></div><div class="tog-thumb"></div>
+        </label>
       </div>
-      <label class="ios-tog">
-        <input type="checkbox" id="tog-lock" onchange="onCardLockChange()">
-        <div class="tog-track"></div><div class="tog-thumb"></div>
-      </label>
+
+      <div class="list-row" onclick="openLimitDashboard()">
+        <div class="badge blue"><span class="material-symbols-rounded">tune</span></div>
+        <div class="row-txt">
+          <div class="row-title">จัดการวงเงินและค่าใช้จ่าย</div>
+        </div>
+        <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
+      </div>
+
+      <div class="list-row">
+        <div class="badge gray"><span class="material-symbols-rounded">dialpad</span></div>
+        <div class="row-txt">
+          <div class="row-title">ดูรหัส PIN ของบัตร</div>
+        </div>
+        <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
+      </div>
+
+      <div class="list-row" onclick="openSuspendCard()">
+        <div class="badge orange"><span class="material-symbols-rounded">credit_card_off</span></div>
+        <div class="row-txt">
+          <div class="row-title">อายัดและขอออกบัตรใหม่</div>
+        </div>
+        <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
+      </div>
+
     </div>
 
-    <div class="list-row" onclick="openLimitDashboard()">
-      <div class="badge blue"><span class="material-symbols-rounded">tune</span></div>
-      <div class="row-txt">
-        <div class="row-title">จัดการวงเงินและค่าใช้จ่าย</div>
-      </div>
-      <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
-    </div>
-
-    <div class="list-row">
-      <div class="badge gray"><span class="material-symbols-rounded">dialpad</span></div>
-      <div class="row-txt">
-        <div class="row-title">ดูรหัส PIN ของบัตร</div>
-      </div>
-      <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
-    </div>
-
-    <div class="list-row">
-      <div class="badge orange"><span class="material-symbols-rounded">credit_card_off</span></div>
-      <div class="row-txt">
-        <div class="row-title">อายัดและขอออกบัตรใหม่</div>
-      </div>
-      <div class="chev"><span class="material-symbols-rounded">chevron_right</span></div>
-    </div>
-
+    <div style="height:40px;"></div>
   </div>
-
-  <div style="height:40px;"></div>
 
 </div><!-- /s1 -->
 
@@ -748,10 +840,13 @@ html.is-mobile #app { width: 100vw !important; }
         <div class="row-txt"><div class="row-title">ถอนเงินสด</div></div>
         <label class="ios-tog"><input type="checkbox" id="tog-cash" checked onchange="markDirty()"><div class="tog-track"></div><div class="tog-thumb"></div></label>
       </div>
-      <div class="list-row no-tap">
-        <div class="badge purple"><span class="material-symbols-rounded">subscriptions</span></div>
-        <div class="row-txt"><div class="row-title">ผูกบัตรและบริการรายเดือน</div></div>
-        <label class="ios-tog"><input type="checkbox" id="tog-sub" checked onchange="markDirty()"><div class="tog-track"></div><div class="tog-thumb"></div></label>
+      <div class="list-row no-tap" style="align-items:flex-start;padding-top:14px;padding-bottom:14px;">
+        <div class="badge purple" style="margin-top:2px;"><span class="material-symbols-rounded">subscriptions</span></div>
+        <div class="row-txt">
+          <div class="row-title">ผูกบัตรกับร้านค้าและอุปกรณ์</div>
+          <div class="row-sub" style="white-space:normal;line-height:1.55;margin-top:4px;">สามารถผูกบัตรคุณกับร้านค้า และอุปกรณ์ต่างๆ ที่ใช้ประจำเพื่อชำระค่าใช้จ่ายอัตโนมัติโดยไม่ต้องใช้บัตรจริงในการจ่ายในครั้งต่อไป</div>
+        </div>
+        <label class="ios-tog" style="margin-top:2px;"><input type="checkbox" id="tog-sub" checked onchange="markDirty()"><div class="tog-track"></div><div class="tog-thumb"></div></label>
       </div>
     </div>
 
@@ -822,12 +917,12 @@ html.is-mobile #app { width: 100vw !important; }
               <span class="material-symbols-rounded">remove</span>
             </button>
             <input class="ios-slider" type="range" id="d-monthly-sl"
-                   min="1" max="100000" step="500" style="--pct:100%" oninput="syncMonthlyAmt()">
+                   min="0" max="100000" step="500" style="--pct:100%" oninput="syncMonthlyAmt()">
             <button class="sl-adj-btn" onclick="adjMonthly(500)" id="btn-monthly-up">
               <span class="material-symbols-rounded">add</span>
             </button>
           </div>
-          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
+          <div class="slider-lbls"><span>0 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
         </div>
 
         <div class="det-sep"></div>
@@ -845,12 +940,12 @@ html.is-mobile #app { width: 100vw !important; }
               <span class="material-symbols-rounded">remove</span>
             </button>
             <input class="ios-slider" type="range" id="d-maxtxn-sl"
-                   min="1" max="100000" step="500" style="--pct:100%" oninput="syncMaxAmt()">
+                   min="0" max="100000" step="500" style="--pct:100%" oninput="syncMaxAmt()">
             <button class="sl-adj-btn" onclick="adjMaxTxn(500)" id="btn-maxtxn-up">
               <span class="material-symbols-rounded">add</span>
             </button>
           </div>
-          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
+          <div class="slider-lbls"><span>0 (ต่ำสุด)</span><span>100,000 (สูงสุด)</span></div>
         </div>
 
         <div class="det-sep"></div>
@@ -868,12 +963,12 @@ html.is-mobile #app { width: 100vw !important; }
               <span class="material-symbols-rounded">remove</span>
             </button>
             <input class="ios-slider" type="range" id="d-count-sl"
-                   min="1" max="999" step="1" style="--pct:100%" oninput="syncCountAmt()">
+                   min="0" max="999" step="1" style="--pct:100%" oninput="syncCountAmt()">
             <button class="sl-adj-btn" onclick="adjCount(1)" id="btn-count-up">
               <span class="material-symbols-rounded">add</span>
             </button>
           </div>
-          <div class="slider-lbls"><span>1 (ต่ำสุด)</span><span>999 (สูงสุด / ไม่จำกัด)</span></div>
+          <div class="slider-lbls"><span>0 (ต่ำสุด)</span><span>999 (สูงสุด / ไม่จำกัด)</span></div>
         </div>
 
       </div>
@@ -895,6 +990,172 @@ html.is-mobile #app { width: 100vw !important; }
   </div>
 
 </div><!-- /s3 -->
+
+
+<!-- ════════════════════════════════
+     SCREEN 4 — อายัดบัตร: เลือกเหตุผล
+════════════════════════════════ -->
+<div class="screen off" id="s4" style="transform:translateX(100%)">
+
+  <div class="status-bar glass">
+    <span class="s-time" id="clk4"></span>
+    <div class="s-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#17171A"><rect x="0" y="7" width="3" height="5" rx=".5"/><rect x="4" y="5" width="3" height="7" rx=".5"/><rect x="8" y="3" width="3" height="9" rx=".5"/><rect x="12" y="0" width="3" height="12" rx=".5" opacity=".35"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#17171A"><circle cx="8" cy="10.5" r="1.5"/><path d="M4.9 7.6A4.5 4.5 0 0 1 8 6.5a4.5 4.5 0 0 1 3.1 1.1l1.4-1.4A6.5 6.5 0 0 0 8 4.5 6.5 6.5 0 0 0 1.5 6.2l1.4 1.4A4.5 4.5 0 0 1 4.9 7.6z" opacity=".8"/><path d="M2 4.5A9 9 0 0 1 8 2a9 9 0 0 1 6 2.5L15.5 3A11 11 0 0 0 8 0 11 11 0 0 0 .5 3z" opacity=".5"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y="1.5" width="21" height="9" rx="2" stroke="#17171A" stroke-opacity=".35" stroke-width="1"/><rect x="23" y="4" width="2" height="4" rx="1" fill="#17171A" fill-opacity=".4"/><rect x="2" y="3" width="16" height="6" rx="1" fill="#17171A"/></svg>
+    </div>
+  </div>
+
+  <div class="nav-compact">
+    <div class="back-btn" onclick="goBackFromS4()">
+      <span class="material-symbols-rounded" style="font-size:20px;">chevron_left</span>ตั้งค่าบัตร
+    </div>
+    <div class="nav-title">อายัดและขอออกบัตรใหม่</div>
+    <div style="width:80px;"></div>
+  </div>
+
+  <div class="susp-scroll" id="s4-scroll">
+    <div class="page-hdr">
+      <div class="page-hdr-title">เลือกเหตุผลเพื่อ<br>อายัดบัตรของคุณ</div>
+      <div class="page-hdr-sub">ปกป้องบัตรของคุณจากรายการที่ไม่ได้ตั้งใจ</div>
+    </div>
+
+    <div class="card-widget">
+      <div class="mini-card">
+        <div class="mini-card-chip"></div>
+        <div class="mini-card-num">**** **** **** 1234</div>
+        <div class="mini-card-logo"><span></span><span></span></div>
+      </div>
+      <div class="card-info">
+        <div class="card-name">Mastercard Platinum</div>
+        <div class="card-masked">xxxx 1234</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr">เลือกเหตุผล</div>
+    <div class="inset-list">
+      <div class="list-row" onclick="selectReason('loss')">
+        <div class="row-txt"><div class="row-title">บัตรสูญหาย</div></div>
+        <div class="radio-btn" id="radio-loss"><div class="radio-dot"></div></div>
+      </div>
+      <div class="list-row" onclick="selectReason('stolen')">
+        <div class="row-txt"><div class="row-title">บัตรถูกขโมย</div></div>
+        <div class="radio-btn" id="radio-stolen"><div class="radio-dot"></div></div>
+      </div>
+      <div class="list-row" onclick="selectReason('fraud')">
+        <div class="row-txt"><div class="row-title">มีรายการทุจริต/ถูกนำไปใช้</div></div>
+        <div class="radio-btn" id="radio-fraud"><div class="radio-dot"></div></div>
+      </div>
+      <div class="list-row" onclick="selectReason('atm')">
+        <div class="row-txt"><div class="row-title">บัตรถูกตู้ ATM ยึด</div></div>
+        <div class="radio-btn" id="radio-atm"><div class="radio-dot"></div></div>
+      </div>
+    </div>
+
+    <div style="height:12px;"></div>
+  </div>
+
+  <div class="sticky-save">
+    <button class="save-btn disabled" id="susp-next-btn" onclick="onSuspNext()">ถัดไป</button>
+  </div>
+
+</div><!-- /s4 -->
+
+
+<!-- ════════════════════════════════
+     SCREEN 5 — อายัดบัตร: ตรวจสอบข้อมูล
+════════════════════════════════ -->
+<div class="screen off" id="s5" style="transform:translateX(100%)">
+
+  <div class="status-bar glass">
+    <span class="s-time" id="clk5"></span>
+    <div class="s-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#17171A"><rect x="0" y="7" width="3" height="5" rx=".5"/><rect x="4" y="5" width="3" height="7" rx=".5"/><rect x="8" y="3" width="3" height="9" rx=".5"/><rect x="12" y="0" width="3" height="12" rx=".5" opacity=".35"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#17171A"><circle cx="8" cy="10.5" r="1.5"/><path d="M4.9 7.6A4.5 4.5 0 0 1 8 6.5a4.5 4.5 0 0 1 3.1 1.1l1.4-1.4A6.5 6.5 0 0 0 8 4.5 6.5 6.5 0 0 0 1.5 6.2l1.4 1.4A4.5 4.5 0 0 1 4.9 7.6z" opacity=".8"/><path d="M2 4.5A9 9 0 0 1 8 2a9 9 0 0 1 6 2.5L15.5 3A11 11 0 0 0 8 0 11 11 0 0 0 .5 3z" opacity=".5"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y="1.5" width="21" height="9" rx="2" stroke="#17171A" stroke-opacity=".35" stroke-width="1"/><rect x="23" y="4" width="2" height="4" rx="1" fill="#17171A" fill-opacity=".4"/><rect x="2" y="3" width="16" height="6" rx="1" fill="#17171A"/></svg>
+    </div>
+  </div>
+
+  <div class="nav-compact">
+    <div class="back-btn" onclick="goBackFromS5()">
+      <span class="material-symbols-rounded" style="font-size:20px;">chevron_left</span>เลือกเหตุผล
+    </div>
+    <div class="nav-title">ตรวจสอบข้อมูล</div>
+    <div style="width:80px;"></div>
+  </div>
+
+  <div class="susp-scroll" id="s5-scroll">
+    <div class="page-hdr">
+      <div class="page-hdr-title">ตรวจสอบก่อนอายัด<br>เพื่อขอออกบัตรใหม่</div>
+      <div class="page-hdr-sub">บัตรจะถูกระงับทุกรายการทันทีเมื่อยืนยัน</div>
+    </div>
+
+    <div class="inset-list">
+      <div class="list-row no-tap">
+        <div class="mini-card" style="width:56px;height:36px;flex-shrink:0;margin-right:14px;border-radius:6px;">
+          <div class="mini-card-chip" style="top:8px;left:7px;width:10px;height:8px;border-radius:1px;"></div>
+          <div class="mini-card-logo" style="bottom:4px;right:6px;">
+            <span style="width:8px;height:8px;"></span>
+            <span style="width:8px;height:8px;"></span>
+          </div>
+        </div>
+        <div class="row-txt">
+          <div class="row-title">Mastercard Platinum</div>
+          <div class="row-sub">xxxx 1234</div>
+        </div>
+      </div>
+      <div class="list-row no-tap" style="justify-content:space-between;">
+        <div style="font-size:15px;color:var(--gray);">เหตุผลที่อายัด</div>
+        <div style="font-size:15px;font-weight:500;color:var(--lbl);" id="review-reason-text">—</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr">ข้อกำหนดและเงื่อนไข</div>
+    <div class="inset-list">
+      <ul class="remarks-list">
+        <li>บัตรใหม่จะถูกจัดส่งไปยังที่อยู่ที่ลงทะเบียนไว้ หากต้องการเปลี่ยนแปลง โปรดโทร 1222 หรือ 0 2456 7890</li>
+        <li>เมื่อยืนยันการอายัด บัตรของคุณจะถูกระงับทุกรายการทันที ทั้งการซื้อสินค้าออนไลน์และหน้าร้าน</li>
+        <li>อาจมีค่าธรรมเนียมการออกบัตรใหม่ขึ้นอยู่กับเหตุผลและเงื่อนไขของธนาคาร</li>
+      </ul>
+    </div>
+
+    <div style="height:12px;"></div>
+  </div>
+
+  <div class="sticky-save">
+    <button class="save-btn enabled" onclick="confirmSuspension()">ยืนยันการอายัดบัตร</button>
+  </div>
+
+</div><!-- /s5 -->
+
+
+<!-- ════════════════════════════════
+     SCREEN 6 — อายัดบัตร: สำเร็จ
+════════════════════════════════ -->
+<div class="screen off" id="s6" style="transform:translateX(100%)">
+
+  <div class="status-bar">
+    <span class="s-time" id="clk6"></span>
+    <div class="s-icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#17171A"><rect x="0" y="7" width="3" height="5" rx=".5"/><rect x="4" y="5" width="3" height="7" rx=".5"/><rect x="8" y="3" width="3" height="9" rx=".5"/><rect x="12" y="0" width="3" height="12" rx=".5" opacity=".35"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="#17171A"><circle cx="8" cy="10.5" r="1.5"/><path d="M4.9 7.6A4.5 4.5 0 0 1 8 6.5a4.5 4.5 0 0 1 3.1 1.1l1.4-1.4A6.5 6.5 0 0 0 8 4.5 6.5 6.5 0 0 0 1.5 6.2l1.4 1.4A4.5 4.5 0 0 1 4.9 7.6z" opacity=".8"/><path d="M2 4.5A9 9 0 0 1 8 2a9 9 0 0 1 6 2.5L15.5 3A11 11 0 0 0 8 0 11 11 0 0 0 .5 3z" opacity=".5"/></svg>
+      <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".5" y="1.5" width="21" height="9" rx="2" stroke="#17171A" stroke-opacity=".35" stroke-width="1"/><rect x="23" y="4" width="2" height="4" rx="1" fill="#17171A" fill-opacity=".4"/><rect x="2" y="3" width="16" height="6" rx="1" fill="#17171A"/></svg>
+    </div>
+  </div>
+
+  <div class="susp-success-wrap">
+    <div class="susp-success-icon">
+      <span class="material-symbols-rounded">check_circle</span>
+    </div>
+    <div class="susp-success-title">อายัดบัตรสำเร็จ</div>
+    <div class="susp-success-body">บัตรของคุณถูกระงับทุกรายการเรียบร้อยแล้ว บัตรใหม่กำลังจัดส่งและจะถึงมือคุณภายใน 5–7 วันทำการ</div>
+  </div>
+
+  <div class="sticky-save">
+    <button class="save-btn enabled" onclick="doneToManageCard()">กลับไปหน้าจัดการบัตร</button>
+  </div>
+
+</div><!-- /s6 -->
 
 
 <!-- ════════════════════════════════
@@ -963,12 +1224,13 @@ const state = {
 let currentKey      = null;
 let isDirty         = false;
 let isCardLocked    = false;
+let isCardSuspended = false;
 let detailSnapshot  = null;
 
 /* ══════════════ CLOCK ══════════════ */
 function tick() {
   const t = new Date().toLocaleTimeString('th',{hour:'2-digit',minute:'2-digit',hour12:false});
-  ['clk1','clk2','clk3'].forEach(id => {
+  ['clk1','clk2','clk3','clk4','clk5','clk6'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = t;
   });
@@ -1006,6 +1268,12 @@ function onCardLockChange() {
   }
 }
 
+function applyCardSuspendedState() {
+  document.getElementById('suspended-banner').classList.toggle('hidden', !isCardSuspended);
+  document.getElementById('s1-suspended-tag').classList.toggle('hidden', !isCardSuspended);
+  document.getElementById('s1-list-section').classList.toggle('suspended', isCardSuspended);
+}
+
 function applyLockBanner() {
   document.getElementById('lock-banner').classList.toggle('hidden', !isCardLocked);
   document.getElementById('s2-content').classList.toggle('locked', isCardLocked);
@@ -1031,6 +1299,9 @@ function clearDirty() {
 const s1 = document.getElementById('s1');
 const s2 = document.getElementById('s2');
 const s3 = document.getElementById('s3');
+const s4 = document.getElementById('s4');
+const s5 = document.getElementById('s5');
+const s6 = document.getElementById('s6');
 
 function slideIn(from, to) {
   from.classList.add('anim-slide-out');
@@ -1114,8 +1385,10 @@ function confirmAndReturnToS2() {
   if (btn && btn.classList.contains('disabled')) return;
   const s = state[currentKey];
   s.enabled = document.getElementById('d-enable').checked;
-  s.monthly = parseInt(document.getElementById('d-monthly').value) || MAX_M;
-  s.maxTxn  = parseInt(document.getElementById('d-maxtxn').value)  || MAX_T;
+  const mRaw = parseInt(document.getElementById('d-monthly').value);
+  const tRaw = parseInt(document.getElementById('d-maxtxn').value);
+  s.monthly = isNaN(mRaw) ? 0 : mRaw;
+  s.maxTxn  = isNaN(tRaw) ? 0 : tRaw;
   s.count   = currentCount;
   goBackFromS3();
   setTimeout(() => {
@@ -1134,10 +1407,12 @@ function setConfirmBtn(enabled) {
 
 function checkDetailDirty() {
   if (!detailSnapshot) return;
+  const mRaw = parseInt(document.getElementById('d-monthly').value);
+  const tRaw = parseInt(document.getElementById('d-maxtxn').value);
   const changed =
     document.getElementById('d-enable').checked !== detailSnapshot.enabled ||
-    (parseInt(document.getElementById('d-monthly').value) || MAX_M) !== detailSnapshot.monthly ||
-    (parseInt(document.getElementById('d-maxtxn').value)  || MAX_T) !== detailSnapshot.maxTxn  ||
+    (isNaN(mRaw) ? 0 : mRaw) !== detailSnapshot.monthly ||
+    (isNaN(tRaw) ? 0 : tRaw) !== detailSnapshot.maxTxn  ||
     currentCount !== detailSnapshot.count;
   setConfirmBtn(changed);
 }
@@ -1154,35 +1429,39 @@ function setSliderPct(id, val, max) {
 }
 
 function setMonthly(v) {
-  v = Math.min(MAX_M, Math.max(1, v || 1));
+  v = isNaN(v) ? 0 : Math.min(MAX_M, Math.max(0, v));
   document.getElementById('d-monthly').value = v;
   document.getElementById('d-monthly-sl').value = v;
-  setSliderPct('d-monthly-sl', v - 1, MAX_M - 1);
+  setSliderPct('d-monthly-sl', v, MAX_M);
 }
 function syncMonthlySlider() { setMonthly(parseInt(document.getElementById('d-monthly').value)); checkDetailDirty(); }
 function syncMonthlyAmt()    { setMonthly(parseInt(document.getElementById('d-monthly-sl').value)); checkDetailDirty(); }
-function adjMonthly(d) { setMonthly((parseInt(document.getElementById('d-monthly').value)||1) + d); checkDetailDirty(); }
+function adjMonthly(d) { setMonthly((parseInt(document.getElementById('d-monthly').value) || 0) + d); checkDetailDirty(); }
 
 function setMaxTxn(v) {
-  v = Math.min(MAX_T, Math.max(1, v || 1));
+  v = isNaN(v) ? 0 : Math.min(MAX_T, Math.max(0, v));
   document.getElementById('d-maxtxn').value = v;
   document.getElementById('d-maxtxn-sl').value = v;
-  setSliderPct('d-maxtxn-sl', v - 1, MAX_T - 1);
+  setSliderPct('d-maxtxn-sl', v, MAX_T);
 }
 function syncMaxSlider() { setMaxTxn(parseInt(document.getElementById('d-maxtxn').value)); checkDetailDirty(); }
 function syncMaxAmt()    { setMaxTxn(parseInt(document.getElementById('d-maxtxn-sl').value)); checkDetailDirty(); }
-function adjMaxTxn(d) { setMaxTxn((parseInt(document.getElementById('d-maxtxn').value)||1) + d); checkDetailDirty(); }
+function adjMaxTxn(d) { setMaxTxn((parseInt(document.getElementById('d-maxtxn').value) || 0) + d); checkDetailDirty(); }
 
 let currentCount = MAX_C;
 function setCount(n) {
-  currentCount = Math.min(MAX_C, Math.max(1, Math.round(n)));
+  currentCount = isNaN(n) ? 0 : Math.min(MAX_C, Math.max(0, Math.round(n)));
   const isMax = currentCount === MAX_C;
   document.getElementById('d-count').value = isMax ? '' : currentCount;
   document.getElementById('d-count').placeholder = isMax ? 'ไม่จำกัด' : '';
   document.getElementById('d-count-sl').value = currentCount;
-  setSliderPct('d-count-sl', currentCount - 1, MAX_C - 1);
+  setSliderPct('d-count-sl', currentCount, MAX_C);
 }
-function syncCountSlider() { setCount(parseInt(document.getElementById('d-count').value) || MAX_C); checkDetailDirty(); }
+function syncCountSlider() {
+  const raw = document.getElementById('d-count').value;
+  setCount(raw === '' ? MAX_C : parseInt(raw));
+  checkDetailDirty();
+}
 function syncCountAmt()    { setCount(parseInt(document.getElementById('d-count-sl').value)); checkDetailDirty(); }
 function adjCount(d) { setCount(currentCount + d); checkDetailDirty(); }
 
@@ -1223,6 +1502,65 @@ function showFaceId() {
       setTimeout(() => showToast('บันทึกการตั้งค่าสำเร็จ', 'check_circle', 'success'), DUR + 50);
     }, 800);
   }, 2000);
+}
+
+/* ══════════════ SUSPEND CARD ══════════════ */
+let suspendReason = null;
+
+const reasonLabels = {
+  loss:   'บัตรสูญหาย',
+  stolen: 'บัตรถูกขโมย',
+  fraud:  'มีรายการทุจริต/ถูกนำไปใช้',
+  atm:    'บัตรถูกตู้ ATM ยึด',
+};
+
+function openSuspendCard() {
+  suspendReason = null;
+  ['loss','stolen','fraud','atm'].forEach(k => {
+    const r = document.getElementById('radio-' + k);
+    if (r) r.classList.remove('selected');
+  });
+  const btn = document.getElementById('susp-next-btn');
+  btn.classList.remove('enabled'); btn.classList.add('disabled');
+  document.getElementById('s4-scroll').scrollTop = 0;
+  slideIn(s1, s4);
+}
+
+function goBackFromS4() {
+  popBack(s4, s1);
+}
+
+function selectReason(key) {
+  suspendReason = key;
+  ['loss','stolen','fraud','atm'].forEach(k => {
+    const r = document.getElementById('radio-' + k);
+    if (r) r.classList.toggle('selected', k === key);
+  });
+  const btn = document.getElementById('susp-next-btn');
+  btn.classList.remove('disabled'); btn.classList.add('enabled');
+}
+
+function onSuspNext() {
+  if (!suspendReason) return;
+  document.getElementById('review-reason-text').textContent = reasonLabels[suspendReason];
+  document.getElementById('s5-scroll').scrollTop = 0;
+  slideIn(s4, s5);
+}
+
+function goBackFromS5() {
+  popBack(s5, s4);
+}
+
+function confirmSuspension() {
+  slideIn(s5, s6);
+}
+
+function doneToManageCard() {
+  isCardSuspended = true;
+  s4.style.transform = 'translateX(100%)';
+  s5.style.transform = 'translateX(100%)';
+  popBack(s6, s1);
+  setTimeout(applyCardSuspendedState, DUR + 50);
 }
 
 function showToast(msg, icon, type) {
